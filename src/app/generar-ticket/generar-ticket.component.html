@@ -1,0 +1,185 @@
+<div class="container">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="true">Pendientes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="home-tab" data-toggle="tab" href="#generar" role="tab" aria-controls="generar" aria-selected="false">Generar Ticket</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="historial" role="tabpanel" aria-labelledby="profile-tab">
+      <h3>Tickets Pendientes</h3>
+      <table class="table table-borderless">
+        <thead class="thead-dark">
+          <th>Estatus</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th width="15%"></th>
+        </thead>
+        <tbody *ngFor="let ti of pendientes.rows">
+          <tr>
+            <td *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><span class="badge badge-warning">{{ti.estatus}}</span></td>
+            <td *ngIf="ti.estatus=='pendiente'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.estatus}}</td>
+            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
+            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.hora}}</td>
+            <td><button class="btn btn-primary btn-sm" type="button" data-toggle="modal" (click)="openModal(ti.id)">Adjuntar Archivos</button></td>
+            <!-- Modal -->
+            <div class="modal fade" id="ModalFile_{{ti.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width:140%;">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adjuntar Archivos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div ng2FileDrop [ngClass]="{'another-file-over-class': hasAnotherDropZoneOver}" (fileOver)="fileOverAnother($event)" [uploader]="uploader" class="well my-drop-zone">
+                          <p class="filezone">Arrastre sus archivos aquí</p>
+                        </div>
+                      </div>
+                      <div class="col-md-8" style="margin-bottom: 40px">
+                        <h4>Archivos seleccionados</h4>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th width="50%">Nombre</th>
+                              <th></th>
+                              <th></th>
+                              <th></th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of uploader.queue">
+                              <td><strong>{{ item?.file?.name }}</strong></td>
+                              <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                              <td *ngIf="uploader.isHTML5">
+                                <div class="progress" style="margin-bottom: 0;">
+                                  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                                </div>
+                              </td>
+                              <td class="text-center">
+                                <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                              </td>
+                              <td nowrap>
+                                <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                                  <span class="glyphicon glyphicon-trash"></span> Remove
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div>
+                          <div>
+                            Progreso:
+                            <div class="progress" style="">
+                              <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="uploader.clearQueue()" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" (click)="cargarArchivos(ti.id)" >Subir Archivos</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane fade" id="generar" role="tabpanel" aria-labelledby="home-tab">
+      <h3>Generar Ticket</h3>
+      <form>
+        <div class="row">
+          <div class="col">
+            <select [(ngModel)]="tipo" class="form-control" name="tipo">
+              <option>Sistemas</option>
+              <option>Diseño</option>
+            </select>
+          </div>
+          <div class="col">
+
+          </div>
+        </div>
+        <h5>Describe el problema y proporciona los datos necesarios en esta sección</h5>
+        <textarea class="form-control" [(ngModel)]="descripcion" name="name" rows="8" cols="80" name="descripcion"></textarea>
+
+        <!--ng2File -->
+        <div class="row">
+          <div class="col-md-3">
+            <h4>Subir archivos</h4>
+            <div ng2FileDrop [ngClass]="{'another-file-over-class': hasAnotherDropZoneOver}" (fileOver)="fileOverAnother($event)" [uploader]="uploader" class="well my-drop-zone">
+              <p class="filezone">Arrastre sus archivos aquí</p>
+            </div>
+          </div>
+          <div class="col-md-9" style="margin-bottom: 40px">
+            <h3>Archivos seleccionados</h3>
+            <p>Cantidad: {{ uploader?.queue?.length }}</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th width="50%">Nombre</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of uploader.queue">
+                  <td><strong>{{ item?.file?.name }}</strong></td>
+                  <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                  <td *ngIf="uploader.isHTML5">
+                    <div class="progress" style="margin-bottom: 0;">
+                      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                    <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                  </td>
+                  <td nowrap>
+                    <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
+                      <span class="glyphicon glyphicon-trash"></span> Remove
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div>
+              <div>
+                Progreso:
+                <div class="progress" style="">
+                  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                <span class="glyphicon glyphicon-trash"></span> Remover todos
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="col">
+          <button class="btn btn-primary btn-lg" (click)="generar()" type="button" name="button">Enviar</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>

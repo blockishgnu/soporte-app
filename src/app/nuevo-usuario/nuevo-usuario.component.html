@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputEmail4">Correo</label>
+      <input type="email" class="form-control" id="inputEmail4" [(ngModel)]="email" placeholder="Correo">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputNombre">Nombre</label>
+      <input type="text" class="form-control" id="inputAddress" [(ngModel)]="nombre" placeholder="Nombre">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputPassword4">Contraseña</label>
+      <input type="password" class="form-control" id="inputPassword4" [(ngModel)]="pass" placeholder="Contraseña">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputPassword4">Confirmar contraseña</label>
+      <input type="password" class="form-control" id="inputPassword4" [(ngModel)]="passcon" placeholder="Contraseña">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-danger btn-lg float-right" (click)="Cancelar()" >Cancelar</button>
+  <button type="submit" class="btn btn-primary btn-lg float-right" (click)="Registrarse()" style="margin-right:20px;" >Registrarse</button>
+</div>

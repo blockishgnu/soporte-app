@@ -1,0 +1,68 @@
+<div class="container">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#tickets" role="tab" aria-controls="tickets" aria-selected="true">Tickets</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="home-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="false">Historial</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tickets" role="tabpanel" aria-labelledby="profile-tab">
+      <table class="table table-borderless">
+        <thead class="thead-dark">
+          <th>Usuario</th>
+          <th>Tipo</th>
+          <th>Estatus</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ti of tickets.rows" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+            <td>{{ti.usuario}}</td>
+            <td>{{ti.tipo}}</td>
+            <td>
+              <span *ngIf="ti.estatus=='observacion'" class="badge badge-info">{{ti.estatus}}</span>
+              <span *ngIf="ti.estatus=='pendiente'" class="badge badge-warning">{{ti.estatus}}</span>
+            </td>
+            <td>{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
+            <td>{{ti.hora}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="home-tab">
+        <div id="cont-find" class="container">
+          <div class="form-row">
+            <div class="col">
+              <span>
+                Fecha Inicio
+                <input [(ngModel)]="fechain" type="date" class="form-control" name="fechain">
+              </span>
+            </div>
+            <div class="col">
+              <span>
+                Fecha Final
+                <input [(ngModel)]="fechafi" type="date" class="form-control"  name="fechafi">
+              </span>
+            </div>
+            <div class="col">
+              <span>
+                <br>
+                <button (click)="buscartickets()" class="btn btn-primary" type="button" name="button">Buscar</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      <table id="busqueda" class="table">
+
+        <tbody>
+          <tr *ngFor="let bs of busqueda.rows" (click)="historialticket(bs.descripcion,bs.estatus);" >
+            <td>{{bs.usuario}}</td>
+            <td>{{bs.fecha | date: 'dd/MM/yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<nav class="navbar navbar-dark bg-primary" *ngIf="aut=='true'">
+  <p class="user-text" >Bienvenido: <strong>{{ nombre }}</strong></p>
+  <button class="btn btn-outline-light my-2 my-sm-0" (click)="Cerrar()" type="submit">Cerrar Sesión</button>
+</nav>
+<div style="text-align:center" *ngIf="aut=='false'">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+
+</div>
+
+
+<router-outlet></router-outlet>
