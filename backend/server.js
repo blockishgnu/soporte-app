@@ -176,9 +176,13 @@ app.post('/api/crearticket', function(req, res) {
   var mes = now.getMonth() + 1;
   var fecha = now.getFullYear() + '-' + mes + '-' + now.getDate();
   var hora = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+  var aprobado = 'Si';
+  if (req.body.autorizacion == 'Si') {
+    aprobado = 'No'
+  }
 
-  connection.query('INSERT INTO tickets(tipo, descripcion, usuario, id_usuario, estatus, fecha, hora) VALUES(?, ?, ?, ?, ?, ?, ?)',
-    [req.body.tipo, req.body.descripcion, req.body.nombre, req.body.id, 'pendiente', fecha, hora],
+  connection.query('INSERT INTO tickets(tipo, descripcion, usuario, id_usuario, estatus, req_autorizacion, aprobado, fecha, hora) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [req.body.tipo, req.body.descripcion, req.body.nombre, req.body.id, 'pendiente', req.body.autorizacion, aprobado, fecha, hora],
     function(err, result) {
       if (err) {
         res.status(404).send({
@@ -310,6 +314,22 @@ app.post('/api/busqueda', function(req, res) {
 
     });
 
+});
+
+app.post('/api/enviarAutorizacion', function(req, res) {
+  connection.query('UPDATE tickets set req_autorizacion = "Si", aprobado = "No" WHERE id="' +
+    req.body.id + '"',
+    function(err, result) {
+      if (err) {
+        res.status(404).send({
+          errorMessage: 'Not found'
+        });
+      } else {
+        res.status(200).send({
+          estatus: 'SUCCESS'
+        });
+      }
+    });
 });
 
 

@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
         const tokenPayload = decode(token);
         if (tokenPayload.tipo == 'administrador') {
           this.router.navigate(['interfaz']);
+        } else if (tokenPayload.tipo == 'autorizacion') {
+          this.router.navigate(['administrador']);
         } else {
           this.router.navigate(['generar-ticket']);
         }

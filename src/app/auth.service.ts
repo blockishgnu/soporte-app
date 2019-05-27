@@ -5,6 +5,10 @@ import Swal from 'sweetalert2';
 import { sha256, sha224 } from 'js-sha256';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
+/**
+* @description Servicios para autentificacion de usuarios
+*/
+
 @Injectable({
   providedIn: 'root'
 })

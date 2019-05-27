@@ -14,6 +14,8 @@
           <th>Usuario</th>
           <th>Tipo</th>
           <th>Estatus</th>
+          <th>Autorizacion Requerida</th>
+          <th>Aprobada</th>
           <th>Fecha</th>
           <th>Hora</th>
         </thead>
@@ -22,8 +24,20 @@
             <td>{{ti.usuario}}</td>
             <td>{{ti.tipo}}</td>
             <td>
-              <span *ngIf="ti.estatus=='observacion'" class="badge badge-info">{{ti.estatus}}</span>
-              <span *ngIf="ti.estatus=='pendiente'" class="badge badge-warning">{{ti.estatus}}</span>
+              <h5 *ngIf="ti.estatus=='observacion'"><span class="badge badge-info">
+                {{ti.estatus}}
+              </span></h5>
+              <h5 *ngIf="ti.estatus=='pendiente'"><span  class="badge badge-warning">
+                {{ti.estatus}}
+              </span></h5>
+            </td>
+            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5 *ngIf="ti.req_autorizacion=='Si'"><span class="badge badge-warning">{{ti.req_autorizacion}}</span></h5>
+              <h5 *ngIf="ti.req_autorizacion=='No'"><span class="badge badge-success">{{ti.req_autorizacion}}</span></h5>
+            </td>
+            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5 *ngIf="ti.aprobado=='Si'"><span class="badge badge-success">{{ti.aprobado}}</span></h5>
+              <h5 *ngIf="ti.aprobado=='No'"><span class="badge badge-danger">{{ti.aprobado}}</span></h5>
             </td>
             <td>{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
             <td>{{ti.hora}}</td>
@@ -32,32 +46,32 @@
       </table>
     </div>
     <div class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="home-tab">
-        <div id="cont-find" class="container">
-          <div class="form-row">
-            <div class="col">
-              <span>
-                Fecha Inicio
-                <input [(ngModel)]="fechain" type="date" class="form-control" name="fechain">
-              </span>
-            </div>
-            <div class="col">
-              <span>
-                Fecha Final
-                <input [(ngModel)]="fechafi" type="date" class="form-control"  name="fechafi">
-              </span>
-            </div>
-            <div class="col">
-              <span>
-                <br>
-                <button (click)="buscartickets()" class="btn btn-primary" type="button" name="button">Buscar</button>
-              </span>
-            </div>
+      <div id="cont-find" class="container">
+        <div class="form-row">
+          <div class="col">
+            <span>
+              Fecha Inicio
+              <input [(ngModel)]="fechain" type="date" class="form-control" name="fechain">
+            </span>
+          </div>
+          <div class="col">
+            <span>
+              Fecha Final
+              <input [(ngModel)]="fechafi" type="date" class="form-control" name="fechafi">
+            </span>
+          </div>
+          <div class="col">
+            <span>
+              <br>
+              <button (click)="buscartickets()" class="btn btn-primary" type="button" name="button">Buscar</button>
+            </span>
           </div>
         </div>
+      </div>
       <table id="busqueda" class="table">
 
         <tbody>
-          <tr *ngFor="let bs of busqueda.rows" (click)="historialticket(bs.descripcion,bs.estatus);" >
+          <tr *ngFor="let bs of busqueda.rows" (click)="historialticket(bs.descripcion,bs.estatus);">
             <td>{{bs.usuario}}</td>
             <td>{{bs.fecha | date: 'dd/MM/yyyy'}}</td>
           </tr>

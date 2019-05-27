@@ -1,0 +1,23 @@
+<div class="container">
+  <table class="table table-borderless">
+    <thead class="thead-dark">
+      <th>Usuario</th>
+      <th>Tipo</th>
+      <th>Estatus</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ti of tickets.rows" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+        <td>{{ti.usuario}}</td>
+        <td>{{ti.tipo}}</td>
+        <td>
+          <span *ngIf="ti.estatus=='observacion'" class="badge badge-info">{{ti.estatus}}</span>
+          <span *ngIf="ti.estatus=='pendiente'" class="badge badge-warning">{{ti.estatus}}</span>
+        </td>
+        <td>{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
+        <td>{{ti.hora}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

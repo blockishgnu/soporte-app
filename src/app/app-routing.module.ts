@@ -7,12 +7,14 @@ import { GenerarTicketComponent } from './generar-ticket/generar-ticket.componen
 import { AuthGuardService as AuthGuard } from './guards/auth-guard.service';
 import { RoleGuardService as RoleGuard } from './guards/role-guard-service.service';
 import { NuevoUsuarioComponent } from './nuevo-usuario/nuevo-usuario.component';
+import { AdministradorComponent } from './administrador/administrador.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'nuevo-usuario', component: NuevoUsuarioComponent},
+  { path: 'nuevo-usuario', component: NuevoUsuarioComponent },
   { path: 'interfaz', component: InterfazComponent, canActivate: [RoleGuard], data: { expectedRole: 'administrador' } },
   { path: 'generar-ticket', component: GenerarTicketComponent, canActivate: [RoleGuard], data: { expectedRole: 'cliente' } },
+  { path: 'administrador', component: AdministradorComponent, canActivate: [RoleGuard], data: { expectedRole: 'autorizacion' } },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', redirectTo: 'login' }
 ];

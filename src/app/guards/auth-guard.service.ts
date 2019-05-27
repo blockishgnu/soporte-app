@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import { AuthService } from './../auth.service';
 
+/**
+* @description Proteger rutas
+*/
+
 @Injectable({
   providedIn: 'root'
 })

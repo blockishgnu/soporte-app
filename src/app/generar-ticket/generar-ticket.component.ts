@@ -21,6 +21,7 @@ export interface DialogData {
 })
 export class GenerarTicketComponent implements OnInit {
   tipo = '';
+  autorizacion = '';
   descripcion = '';
   respuesta;
   pendientes = {};
@@ -40,10 +41,10 @@ export class GenerarTicketComponent implements OnInit {
   }
 
   generar() {
-    if (this.tipo == '' && this.descripcion == '') {
+    if (this.tipo == '' || this.descripcion == '' || this.autorizacion =='') {
       Swal.fire('Campos vacios', 'Debes llenar todos los campos', 'warning');
     } else {
-      this.tic.crearticket(this.tipo, this.descripcion)
+      this.tic.crearticket(this.tipo, this.autorizacion, this.descripcion)
         .subscribe((data: any) => {
           id_ticket = data.id;
           this.uploader.uploadAll();

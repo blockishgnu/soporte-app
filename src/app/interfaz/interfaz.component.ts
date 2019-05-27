@@ -30,6 +30,7 @@ export class InterfazComponent implements OnInit {
         this.tickets = data;
       });
   }
+
   detalles(id, usuario, descripcion, fecha, observacion) {
     var archivos = '';
     this.tic.obtenerArchivos(id)
@@ -54,6 +55,7 @@ export class InterfazComponent implements OnInit {
             '<textarea id="textOb" class="form-control" style="border: 1px solid #aaa;">' + observacion +
             '</textarea> <br>' +
             '<button id="observacion" class="btn btn-success"><i class="fas fa-paper-plane"></i> Enviar</button>' +
+            ' <button id="autorizacion" class="btn btn-warning"><i class="fas fa-user-lock"></i> Autorización</button>' +
             '<hr style="border: 1px solid #aaa;">' +
             '<h5>Archivos adjuntos</h5>' +
             archivos +
@@ -72,9 +74,13 @@ export class InterfazComponent implements OnInit {
             const $ = content.querySelector.bind(content)
             const observacion = $('#observacion');
             const texto = $("#textOb");
+            const autorizacion = $('#autorizacion');
 
             observacion.addEventListener('click', () => {
               this.CrearObservacion(id, texto.value);
+            });
+            autorizacion.addEventListener('click', () => {
+              this.enviarAutorizacion(id);
             });
           },
         }).then((result) => {
@@ -91,12 +97,33 @@ export class InterfazComponent implements OnInit {
     } else {
       this.tic.observacion(id, texto)
         .subscribe((data: any) => {
-          Swal.fire('Correcto', 'Se actualizo la observacion correctamente', 'success');
+          Swal.fire('Correcto',
+            'Se actualizo la observacion correctamente',
+            'success').then((result) => {
+              if (result.value) {
+                location.reload();
+              }
+            });
           location.reload();
         }, (err: any) => {
           Swal.fire('Fallo', 'Ocurrio un error al actualizar la observacion', 'error');
         });
     }
+  }
+
+  enviarAutorizacion(id) {
+    this.tic.enviarAutorizacion(id)
+      .subscribe((data: any) => {
+        Swal.fire('Correcto',
+          'Se envio la peticion de autorizacion correctamente',
+          'success').then((result) => {
+            if (result.value) {
+              location.reload();
+            }
+          });
+      }, (err: any) => {
+        Swal.fire('Fallo', 'Ocurrio un error al enviar la peticion, intentelo nuevamente', 'error');
+      });
   }
 
   ticketRealizado(id) {

@@ -3,6 +3,10 @@ import { Router, CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from './../auth.service';
 import decode from 'jwt-decode';
 
+
+/**
+* @description Proteger rutas con parametros de usuario
+*/
 @Injectable({
   providedIn: 'root'
 })

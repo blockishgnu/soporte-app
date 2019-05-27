@@ -13,14 +13,19 @@
       <table class="table table-borderless">
         <thead class="thead-dark">
           <th>Estatus</th>
+          <th>Autorizacion Requerida</th>
+          <th>Aprobada</th>
           <th>Fecha</th>
           <th>Hora</th>
           <th width="15%"></th>
         </thead>
         <tbody *ngFor="let ti of pendientes.rows">
           <tr>
-            <td *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><span class="badge badge-warning">{{ti.estatus}}</span></td>
+            <td *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-warning">{{ti.estatus}}</span></h5></td>
             <td *ngIf="ti.estatus=='pendiente'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.estatus}}</td>
+            <td *ngIf="ti.req_autorizacion=='Si'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-danger ">{{ti.req_autorizacion}}</span></h5></td>
+            <td *ngIf="ti.req_autorizacion=='No'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.req_autorizacion}}</td>
+            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.aprobado}}</td>
             <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
             <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.hora}}</td>
             <td><button class="btn btn-primary btn-sm" type="button" data-toggle="modal" (click)="openModal(ti.id)">Adjuntar Archivos</button></td>
@@ -89,7 +94,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" (click)="uploader.clearQueue()" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" (click)="cargarArchivos(ti.id)" >Subir Archivos</button>
+                    <button type="button" class="btn btn-primary" (click)="cargarArchivos(ti.id)">Subir Archivos</button>
                   </div>
                 </div>
               </div>
@@ -102,14 +107,19 @@
       <h3>Generar Ticket</h3>
       <form>
         <div class="row">
-          <div class="col">
+          <div class="form-group col-md-6">
+            <h5>Categoria</h5>
             <select [(ngModel)]="tipo" class="form-control" name="tipo">
               <option>Sistemas</option>
               <option>Diseño</option>
             </select>
           </div>
-          <div class="col">
-
+          <div class="form-group col-md-6">
+            <h5>Autorizacion</h5>
+            <select [(ngModel)]="autorizacion" class="form-control" name="autorizacion">
+              <option>No</option>
+              <option>Si</option>
+            </select>
           </div>
         </div>
         <h5>Describe el problema y proporciona los datos necesarios en esta sección</h5>

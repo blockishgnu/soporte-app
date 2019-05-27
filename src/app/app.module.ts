@@ -19,6 +19,7 @@ import { NuevoUsuarioComponent } from './nuevo-usuario/nuevo-usuario.component';
 import { RegistroUsuarioService } from './services/registro-usuario.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AdministradorComponent } from './administrador/administrador.component';
 
 
 
@@ -29,7 +30,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     LoginComponent,
     NotFoundComponent,
     GenerarTicketComponent,
-    NuevoUsuarioComponent
+    NuevoUsuarioComponent,
+    AdministradorComponent
   ],
   imports: [
     BrowserModule,

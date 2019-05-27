@@ -13,6 +13,9 @@ export class TicketsService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+  * @description Servicios para usuario administrador autorizaciones
+  */
 
 
   /**
@@ -36,14 +39,17 @@ export class TicketsService {
   buscador(fechain, fechafi) {
     return this.http.post(this.uri + '/busqueda', { fechain: fechain, fechafi: fechafi });
   }
+  enviarAutorizacion(id) {
+    return this.http.post(this.uri + '/enviarAutorizacion', { id: id });
+  }
 
   /**
   * @description Servicios de usuario cliente
   */
-  crearticket(tipo, descripcion) {
+  crearticket(tipo, autorizacion, descripcion) {
     const token = localStorage.getItem('auth_token');
     const tokenPayload = decode(token);
-    return this.http.post(this.uri + '/crearticket', { tipo: tipo, descripcion: descripcion, id: tokenPayload.id, nombre: tokenPayload.nombre });
+    return this.http.post(this.uri + '/crearticket', { tipo: tipo, autorizacion: autorizacion, descripcion: descripcion, id: tokenPayload.id, nombre: tokenPayload.nombre });
   }
 
   listarPendientes() {
@@ -57,7 +63,7 @@ export class TicketsService {
   }
 
   /**
-  * @description Servicio para de archivos
+  * @description Servicio para archivos
   */
 
   almacenarArchivos(id, name) {
