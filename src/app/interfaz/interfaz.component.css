@@ -1,7 +1,15 @@
-#cont-find{
+#cont-find {
   margin-top: 4%;
 }
 
-#busqueda{
+#busqueda {
+  margin-top: 2%;
+}
+
+.container {
+  margin-top: 2.5%;
+}
+
+.tab-content {
   margin-top: 2%;
 }

@@ -8,8 +8,8 @@ import decode from 'jwt-decode';
 })
 export class TicketsService {
 
-  uri = 'http://localhost:5000/api';
-
+  uri = 'http://ns3.hellogoogle.mx:5000/api';
+  //uri = 'http://192.168.1.199:5000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,17 @@ export class TicketsService {
   * @description Servicios para usuario administrador autorizaciones
   */
 
+  listarAutorizaciones() {
+    return this.http.get(this.uri + '/listarAutorizaciones');
+  }
 
+  Aprobar(id) {
+    return this.http.post(this.uri + '/Aprobar', { id: id });
+  }
+
+  Rechazar(id, descripcion) {
+    return this.http.post(this.uri + '/Rechazar', { id: id, descripcion: descripcion });
+  }
   /**
   * @description Servicios de usuario administrador
   */
@@ -36,8 +46,15 @@ export class TicketsService {
     return this.http.post(this.uri + '/ticketRealizado', { id: id });
   }
 
+  listarClientes() {
+    return this.http.get(this.uri + '/listarClientes');
+  }
+
   buscador(fechain, fechafi) {
     return this.http.post(this.uri + '/busqueda', { fechain: fechain, fechafi: fechafi });
+  }
+  buscadorCliente(fechain, fechafi, cliente) {
+    return this.http.post(this.uri + '/busquedaCliente', { fechain: fechain, fechafi: fechafi, cliente: cliente });
   }
   enviarAutorizacion(id) {
     return this.http.post(this.uri + '/enviarAutorizacion', { id: id });
@@ -49,7 +66,7 @@ export class TicketsService {
   crearticket(tipo, autorizacion, descripcion) {
     const token = localStorage.getItem('auth_token');
     const tokenPayload = decode(token);
-    return this.http.post(this.uri + '/crearticket', { tipo: tipo, autorizacion: autorizacion, descripcion: descripcion, id: tokenPayload.id, nombre: tokenPayload.nombre });
+    return this.http.post(this.uri + '/crearticket', { tipo: tipo, autorizacion: autorizacion, descripcion: descripcion, id: tokenPayload.id, nombre: tokenPayload.nombre, correo: tokenPayload.email });
   }
 
   listarPendientes() {

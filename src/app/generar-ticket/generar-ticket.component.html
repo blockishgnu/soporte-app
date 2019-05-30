@@ -22,6 +22,7 @@
         <tbody *ngFor="let ti of pendientes.rows">
           <tr>
             <td *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-warning">{{ti.estatus}}</span></h5></td>
+            <td *ngIf="ti.estatus=='rechazado'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-danger">{{ti.estatus}}</span></h5></td>
             <td *ngIf="ti.estatus=='pendiente'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.estatus}}</td>
             <td *ngIf="ti.req_autorizacion=='Si'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-danger ">{{ti.req_autorizacion}}</span></h5></td>
             <td *ngIf="ti.req_autorizacion=='No'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.req_autorizacion}}</td>

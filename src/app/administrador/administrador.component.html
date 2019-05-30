@@ -8,7 +8,7 @@
       <th>Hora</th>
     </thead>
     <tbody>
-      <tr *ngFor="let ti of tickets.rows" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+      <tr *ngFor="let ti of autorizaciones.rows" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
         <td>{{ti.usuario}}</td>
         <td>{{ti.tipo}}</td>
         <td>

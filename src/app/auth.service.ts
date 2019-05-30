@@ -13,7 +13,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root'
 })
 export class AuthService {
-  uri = 'http://localhost:5000/api';
+  uri = 'http://ns3.hellogoogle.mx:5000/api';
   token;
   helper = new JwtHelperService();
   constructor(private http: HttpClient, private router: Router) { }

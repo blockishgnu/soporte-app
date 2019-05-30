@@ -16,11 +16,13 @@ import { AuthService } from '../auth.service';
 export class InterfazComponent implements OnInit {
 
   tickets = {};
+  clientes = {};
   res = '';
   busqueda = {};
   fechafi = '';
   fechain = '';
   rutasArchivos = [];
+  clienteselected = '';
 
   constructor(private tic: TicketsService, private auth: AuthService) { }
 
@@ -28,6 +30,11 @@ export class InterfazComponent implements OnInit {
     this.tic.listar()
       .subscribe((data) => {
         this.tickets = data;
+      });
+
+    this.tic.listarClientes()
+      .subscribe((data) => {
+        this.clientes = data;
       });
   }
 
@@ -41,7 +48,7 @@ export class InterfazComponent implements OnInit {
         } else {
           this.rutasArchivos = data.rows;
           for (var i = 0; this.rutasArchivos.length > i; i++) {
-            archivos = archivos + '<a href="http://localhost/soporte-app/backend/archivos/' +
+            archivos = archivos + '<a href="http://soporte.hellodigital.com.mx/backend/archivos/' +
               this.rutasArchivos[i].ruta + '" target="_blank"><i class="far fa-file-alt fa-lg"></i></a> ';
           }
         }
@@ -141,18 +148,31 @@ export class InterfazComponent implements OnInit {
       });
   }
 
+  selectChangeHandler(event: any) {
+    this.clienteselected = event.target.value;
+  }
+
   buscartickets() {
     if (this.fechain == '' || this.fechafi == '') {
       Swal.fire("Aviso", "Debes seleccionar las fechas", "warning");
     } else if (this.fechain > this.fechafi) {
       Swal.fire("Aviso", "Elige una fecha de inicio menor a la fecha final", "warning");
     } else {
-      this.tic.buscador(this.fechain, this.fechafi)
-        .subscribe((data) => {
-          this.busqueda = data;
-        }, (err: any) => {
-          Swal.fire("Aviso", "No se encontraron tickets en el margen de fechas seleccionado", "info");
-        });
+      if (this.clienteselected != '') {
+        this.tic.buscadorCliente(this.fechain, this.fechafi, this.clienteselected)
+          .subscribe((data) => {
+            this.busqueda = data;
+          }, (err: any) => {
+            Swal.fire("Aviso", "No se encontraron tickets con el cliente y margen de fechas seleccionadas", "info");
+          });
+      } else {
+        this.tic.buscador(this.fechain, this.fechafi)
+          .subscribe((data) => {
+            this.busqueda = data;
+          }, (err: any) => {
+            Swal.fire("Aviso", "No se encontraron tickets en el margen de fechas seleccionado", "info");
+          });
+      }
     }
   }
 

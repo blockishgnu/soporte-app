@@ -7,6 +7,7 @@ var mysql = require('mysql');
 var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
+var nodemailer = require('nodemailer');
 
 var DIR = './archivos/';
 let storage = multer.diskStorage({
@@ -21,7 +22,15 @@ let upload = multer({
   storage: storage
 });
 
-
+var transporter = nodemailer.createTransport({
+  host: 'mail.hellodigital.mx',
+  port: 465,
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: 'programacion2@hellodigital.mx', // correo
+    pass: '' //  password
+  }
+});
 
 //CREATE EXPRESS APP
 const app = express();
@@ -82,11 +91,6 @@ function setValue(value, usuario) {
 
 //Inicio de sesión
 app.post('/api/authenticate', function(req, res) {
-
-  var testUser = {
-    email: 'blockishgnu@gmail.com',
-    password: '12345'
-  };
 
   if (req.body) {
     var user = req.body;
@@ -181,8 +185,8 @@ app.post('/api/crearticket', function(req, res) {
     aprobado = 'No'
   }
 
-  connection.query('INSERT INTO tickets(tipo, descripcion, usuario, id_usuario, estatus, req_autorizacion, aprobado, fecha, hora) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [req.body.tipo, req.body.descripcion, req.body.nombre, req.body.id, 'pendiente', req.body.autorizacion, aprobado, fecha, hora],
+  connection.query('INSERT INTO tickets(tipo, descripcion, usuario, mail, id_usuario, estatus, req_autorizacion, aprobado, fecha, hora) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [req.body.tipo, req.body.descripcion, req.body.nombre, req.body.correo, req.body.id, 'pendiente', req.body.autorizacion, aprobado, fecha, hora],
     function(err, result) {
       if (err) {
         res.status(404).send({
@@ -192,6 +196,25 @@ app.post('/api/crearticket', function(req, res) {
         connection.query('SELECT MAX(id) AS id FROM tickets',
           function(err, rows, fields) {
             if (rows != "") {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                req.body.correo
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket creado',
+                text: 'Se genero un ticket con id: ' + rows[0].id + ' .'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+
               res.status(200).send({
                 estatus: 'SUCCESS',
                 id: rows[0].id
@@ -237,6 +260,32 @@ app.post('/api/editarDescripcion', function(req, res) {
           errorMessage: 'Not found'
         });
       } else {
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket actualizacion',
+                text: 'El ticket con id: ' + req.body.id + ' actualizo su descripción'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
         res.status(200).send({
           estatus: 'SUCCESS'
         });
@@ -273,6 +322,33 @@ app.post('/api/agregarObservacion', function(req, res) {
           errorMessage: 'Not found'
         });
       } else {
+
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket actualizacion',
+                text: 'El ticket con id: ' + req.body.id + ' requiere mas información'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
+
         res.status(200).send({
           estatus: 'SUCCESS'
         });
@@ -290,12 +366,54 @@ app.post('/api/ticketRealizado', function(req, res) {
           errorMessage: 'Not found'
         });
       } else {
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket realizado',
+                text: 'El ticket con id: ' + req.body.id + ' fue resuelto'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
         res.status(200).send({
           estatus: 'SUCCESS'
         });
       }
     });
 
+});
+
+app.get('/api/listarClientes', function(req, res) {
+  connection.query('SELECT * FROM usuarios WHERE tipo="cliente"',
+    function(err, rows, fields) {
+      if (err) {
+        res.status(200).send({
+          errorMessage: 'Fallo'
+        });
+      } else {
+        res.status(200).send({
+          rows
+        });
+      }
+
+    });
 });
 
 app.post('/api/busqueda', function(req, res) {
@@ -313,7 +431,23 @@ app.post('/api/busqueda', function(req, res) {
       }
 
     });
+});
 
+app.post('/api/busquedaCliente', function(req, res) {
+  connection.query('SELECT * FROM tickets WHERE id_usuario="' + req.body.cliente +
+    '" AND fecha BETWEEN "' + req.body.fechain + '" AND "' + req.body.fechafi + '" ',
+    function(err, rows, fields) {
+      if (rows != "") {
+        res.status(200).send({
+          rows
+        });
+      } else {
+        res.status(404).send({
+          errorMessage: 'Not found'
+        });
+      }
+
+    });
 });
 
 app.post('/api/enviarAutorizacion', function(req, res) {
@@ -325,8 +459,133 @@ app.post('/api/enviarAutorizacion', function(req, res) {
           errorMessage: 'Not found'
         });
       } else {
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket en autorizacion',
+                text: 'El ticket con id: ' + req.body.id + ' requiere autorizacion'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
         res.status(200).send({
           estatus: 'SUCCESS'
+        });
+      }
+    });
+});
+
+app.get('/api/listarAutorizaciones', function(req, res) {
+  connection.query('SELECT * FROM tickets WHERE req_autorizacion = "Si" AND aprobado = "No" AND estatus !="rechazado"',
+    function(err, rows, fields) {
+      if (err) {
+        res.status(404).send({
+          errorMessage: 'Not found'
+        });
+      } else {
+        res.status(200).send({
+          rows
+        });
+      }
+    });
+});
+
+app.post('/api/Aprobar', function(req, res) {
+  connection.query("UPDATE tickets SET aprobado='Si' WHERE id='" +
+    req.body.id + "'",
+    function(err, fields) {
+      if (err) {
+        res.status(404).send({
+          errorMessage: 'Fail'
+        });
+      } else {
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket aprobado',
+                text: 'El ticket con id: ' + req.body.id + ' fue aprobado'
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
+        res.status(200).send({
+          Message: 'ok :)'
+        });
+      }
+    });
+});
+
+app.post('/api/Rechazar', function(req, res) {
+  connection.query("UPDATE Tickets SET estatus='rechazado', observacion_rechazo='" +
+    req.body.descripcion + "' WHERE id='" + req.body.id + "'",
+    function(err, fields) {
+      if (err) {
+        res.status(404).send({
+          errorMessage: 'Fail'
+        });
+      } else {
+        connection.query('SELECT * FROM tickets WHERE id="' +
+          req.body.id + '"',
+          function(err, rows, fields) {
+            if (err) {
+              console.log("error connection");
+            } else {
+              var maillist = [
+                'programacion2@hellodigital.mx',
+                rows[0].mail
+              ];
+
+              var mailOptions = {
+                from: 'soporte-app',
+                to: maillist,
+                subject: 'Ticket rechazado',
+                text: 'El ticket con id: ' + req.body.id + ' fue rechazado por el motivo: ' + req.body.descripcion
+              };
+              transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent", info);
+                }
+              });
+            }
+          });
+        res.status(200).send({
+          Message: 'Ok :)'
         });
       }
     });

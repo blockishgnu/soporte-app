@@ -5,7 +5,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { AuthService } from '../auth.service';
 
 
-const URL = 'http://localhost:5000/api/file';
+const URL = 'http://ns3.hellogoogle.mx:5000/api/file';
 var id_ticket = 0;
 declare var $: any;
 
@@ -75,7 +75,7 @@ export class GenerarTicketComponent implements OnInit {
         } else {
           this.rutasArchivos = data.rows;
           for (var i = 0; this.rutasArchivos.length > i; i++) {
-            archivos = archivos + '<a href="http://localhost/soporte-app/backend/archivos/' +
+            archivos = archivos + '<a href="http://soporte.hellodigital.com.mx/backend/archivos/' +
               this.rutasArchivos[i].ruta + '" target="_blank"><i class="far fa-file-alt fa-lg"></i></a> ';
           }
         }
@@ -146,7 +146,7 @@ export class GenerarTicketComponent implements OnInit {
         .subscribe((data) => {
           console.log('FileUpload:uploaded');
           if (this.uploader.progress == 100) {
-            Swal.fire('Correcto', 'Se ha generado el ticket correctamente', 'success')
+            Swal.fire('Correcto', 'Se adjuntaron los archivos correctamente', 'success')
               .then((result) => {
                 location.reload();
               });
