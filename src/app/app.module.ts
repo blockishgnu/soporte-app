@@ -9,8 +9,8 @@ import { TicketsService } from "./tickets.service";
 import { AuthService } from "./auth.service";
 import { HttpModule } from '@angular/http';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { GenerarTicketComponent } from './generar-ticket/generar-ticket.component';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthGuardService } from './guards/auth-guard.service';
@@ -18,8 +18,31 @@ import { RoleGuardService } from './guards/role-guard-service.service';
 import { NuevoUsuarioComponent } from './nuevo-usuario/nuevo-usuario.component';
 import { RegistroUsuarioService } from './services/registro-usuario.service';
 import { FileUploadModule } from 'ng2-file-upload';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministradorComponent } from './administrador/administrador.component';
+
+
+import { A11yModule } from '@angular/cdk/a11y';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PortalModule } from '@angular/cdk/portal';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import {
+  MatButtonModule,
+  MatToolbarModule,
+  MatInputModule,
+  MatSelectModule,
+  MatFormFieldModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatTableModule,
+  MatTooltipModule,
+  MatRippleModule,
+  MatProgressBarModule,
+  MatIconModule
+} from '@angular/material';
 
 
 
@@ -40,7 +63,24 @@ import { AdministradorComponent } from './administrador/administrador.component'
     HttpModule,
     HttpClientModule,
     FileUploadModule,
-    BrowserAnimationsModule
+    A11yModule,
+    CdkStepperModule,
+    CdkTableModule,
+    CdkTreeModule,
+    DragDropModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatRippleModule,
+    MatProgressBarModule,
+    MatIconModule
   ],
   providers: [
     TicketsService,

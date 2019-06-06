@@ -1,17 +1,22 @@
 <div class="container">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="true">Pendientes</a>
+    <li class="nav-item" matRipple>
+      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="true">
+        <strong>Pendientes</strong>
+      </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="home-tab" data-toggle="tab" href="#generar" role="tab" aria-controls="generar" aria-selected="false">Generar Ticket</a>
+    <li class="nav-item" matRipple>
+      <a class="nav-link" id="home-tab" data-toggle="tab" href="#generar" role="tab" aria-controls="generar" aria-selected="false">
+        <strong>Generar Ticket</strong>
+      </a>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="historial" role="tabpanel" aria-labelledby="profile-tab">
       <h3>Tickets Pendientes</h3>
       <table class="table table-borderless">
-        <thead class="thead-dark">
+        <thead class="thead-dark text-center">
+          <th>ID Ticket</th>
           <th>Estatus</th>
           <th>Autorizacion Requerida</th>
           <th>Aprobada</th>
@@ -19,17 +24,39 @@
           <th>Hora</th>
           <th width="15%"></th>
         </thead>
-        <tbody *ngFor="let ti of pendientes.rows">
+        <tbody *ngFor="let ti of pendientes">
           <tr>
-            <td *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-warning">{{ti.estatus}}</span></h5></td>
-            <td *ngIf="ti.estatus=='rechazado'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-danger">{{ti.estatus}}</span></h5></td>
-            <td *ngIf="ti.estatus=='pendiente'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.estatus}}</td>
-            <td *ngIf="ti.req_autorizacion=='Si'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)"><h5><span class="badge badge-danger ">{{ti.req_autorizacion}}</span></h5></td>
-            <td *ngIf="ti.req_autorizacion=='No'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.req_autorizacion}}</td>
-            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.aprobado}}</td>
-            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.fecha | date: 'dd/MM/yyyy'}}</td>
-            <td (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">{{ti.hora}}</td>
-            <td><button class="btn btn-primary btn-sm" type="button" data-toggle="modal" (click)="openModal(ti.id)">Adjuntar Archivos</button></td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}">{{ti.id}}</td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" *ngIf="ti.estatus=='observacion'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-warning">{{ti.estatus}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" *ngIf="ti.estatus=='rechazado'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-danger">{{ti.estatus}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" *ngIf="ti.estatus=='pendiente'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-info">{{ti.estatus}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" *ngIf="ti.req_autorizacion=='Si'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-danger ">{{ti.req_autorizacion}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" *ngIf="ti.req_autorizacion=='No'" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-success">{{ti.req_autorizacion}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              <h5><span class="badge badge-success" *ngIf="ti.aprobado=='Si'">{{ti.aprobado}}</span></h5>
+              <h5><span class="badge badge-warning" *ngIf="ti.aprobado=='No'">{{ti.aprobado}}</span></h5>
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              {{ti.fecha | date: 'dd/MM/yyyy'}}
+            </td>
+            <td class="text-center" matTooltip="Click para ver detalles del ticket con id {{ti.id}}" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+              {{ti.hora}}
+            </td>
+            <td class="text-center">
+              <button mat-icon-button color="primary" matTooltip="Adjuntar Archivos" data-toggle="modal" (click)="openModal(ti.id)">
+                <i class="material-icons">attach_file</i>
+              </button>
+            </td>
             <!-- Modal -->
             <div class="modal fade" id="ModalFile_{{ti.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -47,7 +74,7 @@
                           <p class="filezone">Arrastre sus archivos aquí</p>
                         </div>
                       </div>
-                      <div class="col-md-8" style="margin-bottom: 40px">
+                      <div class="col-md-8 text-center" style="margin-bottom: 40px">
                         <h4>Archivos seleccionados</h4>
                         <table class="table">
                           <thead>
@@ -61,7 +88,11 @@
                           </thead>
                           <tbody>
                             <tr *ngFor="let item of uploader.queue">
-                              <td><strong>{{ item?.file?.name }}</strong></td>
+                              <td>
+                                <mat-label>
+                                  {{ item?.file?.name }}
+                                </mat-label>
+                              </td>
                               <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
                               <td *ngIf="uploader.isHTML5">
                                 <div class="progress" style="margin-bottom: 0;">
@@ -74,8 +105,8 @@
                                 <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                               </td>
                               <td nowrap>
-                                <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-                                  <span class="glyphicon glyphicon-trash"></span> Remove
+                                <button mat-icon-button color="warn" matTooltip="Remover" (click)="item.remove()">
+                                  <i class="material-icons">delete</i>
                                 </button>
                               </td>
                             </tr>
@@ -83,19 +114,22 @@
                         </table>
                         <div>
                           <div>
-                            Progreso:
-                            <div class="progress" style="">
-                              <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                            <mat-label>Progreso:</mat-label>
+                            <div class="cont-progress">
+                              <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="uploader.clearQueue()" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" (click)="cargarArchivos(ti.id)">Subir Archivos</button>
+                    <button mat-raised-button color="warn" (click)="uploader.clearQueue()" data-dismiss="modal">
+                      <i class="material-icons">unarchive</i><strong> Cancelar</strong>
+                    </button>
+                    <button mat-raised-button color="primary" (click)="cargarArchivos(ti.id)">
+                      <i class="material-icons">archive</i><strong> Guardar Archivos</strong>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -109,22 +143,28 @@
       <form>
         <div class="row">
           <div class="form-group col-md-6">
-            <h5>Categoria</h5>
-            <select [(ngModel)]="tipo" class="form-control" name="tipo">
-              <option>Sistemas</option>
-              <option>Diseño</option>
-            </select>
+            <mat-form-field class="full-width">
+              <mat-label><strong>Categoria</strong></mat-label>
+              <mat-select [(ngModel)]="tipo" name="tipo">
+                <mat-option value="Sistemas">Sistemas</mat-option>
+                <mat-option value="Diseño">Diseño</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div class="form-group col-md-6">
-            <h5>Autorizacion</h5>
-            <select [(ngModel)]="autorizacion" class="form-control" name="autorizacion">
-              <option>No</option>
-              <option>Si</option>
-            </select>
+            <mat-form-field class="full-width">
+              <mat-label><strong>Autorizacion</strong></mat-label>
+              <mat-select [(ngModel)]="autorizacion" name="autorizacion">
+                <mat-option value="No">No</mat-option>
+                <mat-option Value="Si">Si</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
-        <h5>Describe el problema y proporciona los datos necesarios en esta sección</h5>
-        <textarea class="form-control" [(ngModel)]="descripcion" name="name" rows="8" cols="80" name="descripcion"></textarea>
+        <mat-form-field class="full-width">
+          <mat-label><strong>Describe el problema y proporciona los datos necesarios en esta sección</strong></mat-label>
+          <textarea matInput [(ngModel)]="descripcion" name="name" rows="8" cols="80" name="descripcion"></textarea>
+        </mat-form-field>
 
         <!--ng2File -->
         <div class="row">
@@ -162,8 +202,8 @@
                     <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                   </td>
                   <td nowrap>
-                    <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-                      <span class="glyphicon glyphicon-trash"></span> Remove
+                    <button mat-icon-button color="warn" matTooltip="Remover" (click)="item.remove()">
+                      <i class="material-icons">delete</i>
                     </button>
                   </td>
                 </tr>
@@ -171,26 +211,24 @@
             </table>
             <div>
               <div>
-                Progreso:
-                <div class="progress" style="">
-                  <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                <mat-label>Progreso:</mat-label>
+                <div class="cont-progress">
+                  <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
                 </div>
               </div>
-              <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-                <span class="glyphicon glyphicon-trash"></span> Remover todos
+              <button class="btnRem" mat-raised-button color="warn" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                <i class="material-icons">unarchive</i><strong> Cancelar</strong>
               </button>
             </div>
 
           </div>
         </div>
-
-
         <div class="col">
-          <button class="btn btn-primary btn-lg" (click)="generar()" type="button" name="button">Enviar</button>
+          <button mat-raised-button color="primary" (click)="generar()" type="button" name="button">
+            <i class="material-icons">send</i><strong> Enviar</strong>
+          </button>
         </div>
       </form>
     </div>
-
   </div>
-
 </div>

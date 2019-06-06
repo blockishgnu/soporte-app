@@ -1,13 +1,26 @@
+<!--
 <nav class="navbar navbar-dark bg-primary" *ngIf="aut=='true'">
-  <p class="user-text" >Bienvenido: <strong>{{ nombre }}</strong></p>
-  <button class="btn btn-outline-light my-2 my-sm-0" (click)="Cerrar()" type="submit">Cerrar Sesión</button>
+  <p class="user-text">Bienvenido: <strong>{{ nombre }}</strong></p>
+  <button class="btn btn-outline-light my-2 my-sm-0" (click)="Cerrar()" type="submit">
+    <i class="material-icons">exit_to_app</i> Cerrar Sesión</button>
 </nav>
-<div style="text-align:center" *ngIf="aut=='false'">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-
-</div>
-
-
+-->
+<mat-toolbar class="toolbar" color="primary" *ngIf="aut=='true'">
+  <span>Bienvenido: <strong>{{ nombre }}</strong></span>
+  <span class="example-fill-remaining-space"></span>
+  <button mat-raised-button color="primary" matTooltip="Cerrar Sesión" (click)="Cerrar()">
+    <i class="material-icons">exit_to_app</i><strong></strong>
+  </button>
+</mat-toolbar>
 <router-outlet></router-outlet>
+
+<!--
+<mat-toolbar class="footer" color="primary" *ngIf="aut=='true'">
+  <img class="logo-footer" src="Hello-Blanco.png" alt="">
+  <mat-label>&nbsp;© Hello Digital S. de R.L. de C.V.</mat-label>
+  <mat-label>Derechos Reservados 2018 | Políticas de privacidad</mat-label>
+  <span class="example-fill-remaining-space"></span>
+  <mat-label>Calle Pedro Moreno 1545, Americana</mat-label>
+  <mat-label>&nbsp;44160 Guadalajara, México</mat-label>
+</mat-toolbar>
+-->

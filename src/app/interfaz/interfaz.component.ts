@@ -13,33 +13,54 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./interfaz.component.css']
 })
 
+/*
+export interface DataTickets {
+  id: number;
+  tipo: string;
+  descripcion: string;
+  usuario: string;
+  mail: string;
+  id_usuario: number;
+  estatus: string;
+  observacion: string;
+  req_autorizacion:string;
+  aprobado:string;
+  observacion_rechazo:string;
+  fecha:string;
+
+}
+*/
+
 export class InterfazComponent implements OnInit {
 
-  tickets = {};
-  clientes = {};
+  tickets = [];
+  clientes = [];
   res = '';
-  busqueda = {};
+  busqueda = [];
   fechafi = '';
   fechain = '';
   rutasArchivos = [];
   clienteselected = '';
+  cantidad = 0;
+  historial = [];
 
   constructor(private tic: TicketsService, private auth: AuthService) { }
 
   ngOnInit() {
     this.tic.listar()
       .subscribe((data) => {
-        this.tickets = data;
+        this.tickets = data['rows'];
       });
 
     this.tic.listarClientes()
       .subscribe((data) => {
-        this.clientes = data;
+        this.clientes = data['rows'];
       });
   }
 
   detalles(id, usuario, descripcion, fecha, observacion) {
     var archivos = '';
+    var historial = '';
     this.tic.obtenerArchivos(id)
       .subscribe((data: any) => {
 
@@ -52,49 +73,75 @@ export class InterfazComponent implements OnInit {
               this.rutasArchivos[i].ruta + '" target="_blank"><i class="far fa-file-alt fa-lg"></i></a> ';
           }
         }
-        Swal.fire({
-          title: '<strong>Detalles</strong>',
-          html:
-            'Usuario: <b>' + usuario + '</b> Fecha: <b>' + fecha + '</b>' +
-            '<h5><b>Descripcion del ticket:</b></h5>' +
-            descripcion +
-            '<h5>Observaciones</h5>' +
-            '<textarea id="textOb" class="form-control" style="border: 1px solid #aaa;">' + observacion +
-            '</textarea> <br>' +
-            '<button id="observacion" class="btn btn-success"><i class="fas fa-paper-plane"></i> Enviar</button>' +
-            ' <button id="autorizacion" class="btn btn-warning"><i class="fas fa-user-lock"></i> Autorización</button>' +
-            '<hr style="border: 1px solid #aaa;">' +
-            '<h5>Archivos adjuntos</h5>' +
-            archivos +
-            '<hr style="border: 1px solid #aaa;">',
-          showCloseButton: true,
-          showCancelButton: false,
-          focusConfirm: false,
-          confirmButtonText:
-            '<i class="fas fa-clipboard-check"></i> Resuelto',
-          confirmButtonAriaLabel: 'Thumbs up, great!',
-          cancelButtonText:
-            '<i class="fa fa-thumbs-down"></i>',
-          cancelButtonAriaLabel: 'Thumbs down',
-          onBeforeOpen: () => {
-            const content = Swal.getContent()
-            const $ = content.querySelector.bind(content)
-            const observacion = $('#observacion');
-            const texto = $("#textOb");
-            const autorizacion = $('#autorizacion');
+        this.tic.obtenerHistorial(id)
+          .subscribe((data: any) => {
+            if (data.Message == 'Not-found') {
+              historial = '<tr>Sin historial para mostrar</tr>';
+            } else {
+              historial = '<table class="table" style="font-size:12px;">' +
+                '<thead><tr><th>Estatus</th><th>Comentario</th><th>Fecha</th><th>Hora</th>' +
+                '</thead>' +
+                '<tbody>';
+              this.historial = data.rows;
+              for (var i = 0; this.historial.length > i; i++) {
+                let date = new Date(this.historial[i].fecha);
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                historial = historial + '<tr>' + '<td>' + this.historial[i].estatus + '</td>' +
+                  '<td>' + this.historial[i].comentario + '</td>' + '<td>' + day + '-' + month + '-' + year + '</td>' +
+                  '<td>' + this.historial[i].hora + '</td>' + '</tr> ';
+              }
+              historial = historial +
+                '</tbody>' +
+                '</table>';
 
-            observacion.addEventListener('click', () => {
-              this.CrearObservacion(id, texto.value);
+            }
+
+            Swal.fire({
+              title: '<strong>Historial</strong>',
+              html:
+                historial +
+                '<h5><b>Descripcion del ticket:</b></h5>' +
+                descripcion +
+                '<h5>Observaciones</h5>' +
+                '<textarea id="textOb" class="form-control" style="border: 1px solid #aaa;">' + observacion +
+                '</textarea> <br>' +
+                '<button id="observacion" class="btn btn-success"><i class="fas fa-paper-plane"></i> Enviar</button>' +
+                ' <button id="autorizacion" class="btn btn-warning"><i class="fas fa-user-lock"></i> Autorización</button>' +
+                '<hr style="border: 1px solid #aaa;">' +
+                '<h5>Archivos adjuntos</h5>' +
+                archivos +
+                '<hr style="border: 1px solid #aaa;">',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText:
+                '<i class="fas fa-clipboard-check"></i> Resuelto',
+              confirmButtonAriaLabel: 'Thumbs up, great!',
+              cancelButtonText:
+                '<i class="fa fa-thumbs-down"></i>',
+              cancelButtonAriaLabel: 'Thumbs down',
+              onBeforeOpen: () => {
+                const content = Swal.getContent()
+                const $ = content.querySelector.bind(content)
+                const observacion = $('#observacion');
+                const texto = $("#textOb");
+                const autorizacion = $('#autorizacion');
+
+                observacion.addEventListener('click', () => {
+                  this.CrearObservacion(id, texto.value);
+                });
+                autorizacion.addEventListener('click', () => {
+                  this.enviarAutorizacion(id);
+                });
+              },
+            }).then((result) => {
+              if (result.value) {
+                this.ticketRealizado(id);
+              }
             });
-            autorizacion.addEventListener('click', () => {
-              this.enviarAutorizacion(id);
-            });
-          },
-        }).then((result) => {
-          if (result.value) {
-            this.ticketRealizado(id);
-          }
-        });
+          });
       });
   }
 
@@ -154,21 +201,23 @@ export class InterfazComponent implements OnInit {
 
   buscartickets() {
     if (this.fechain == '' || this.fechafi == '') {
-      Swal.fire("Aviso", "Debes seleccionar las fechas", "warning");
+      Swal.fire("Aviso", "Selecciona fechas validas", "warning");
     } else if (this.fechain > this.fechafi) {
       Swal.fire("Aviso", "Elige una fecha de inicio menor a la fecha final", "warning");
     } else {
       if (this.clienteselected != '') {
         this.tic.buscadorCliente(this.fechain, this.fechafi, this.clienteselected)
           .subscribe((data) => {
-            this.busqueda = data;
+            this.busqueda = data['rows'];
+            this.cantidad = data['rows'].length;
           }, (err: any) => {
             Swal.fire("Aviso", "No se encontraron tickets con el cliente y margen de fechas seleccionadas", "info");
           });
       } else {
         this.tic.buscador(this.fechain, this.fechafi)
           .subscribe((data) => {
-            this.busqueda = data;
+            this.busqueda = data['rows'];
+            this.cantidad = data['rows'].length;
           }, (err: any) => {
             Swal.fire("Aviso", "No se encontraron tickets en el margen de fechas seleccionado", "info");
           });

@@ -91,4 +91,13 @@ export class TicketsService {
     return this.http.post(this.uri + '/obtenerRutas', { id: id });
   }
 
+  /**
+  * @description Servicio para historial
+  */
+
+  obtenerHistorial(id) {
+    return this.http.post(this.uri + '/obtenerCambios', { id: id });
+  }
+
+
 }

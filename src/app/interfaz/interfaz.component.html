@@ -1,15 +1,17 @@
 <div class="container">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#tickets" role="tab" aria-controls="tickets" aria-selected="true"><strong>Tickets</strong></a>
+      <a class="nav-link active" matRipple id="profile-tab" data-toggle="tab" href="#tickets" role="tab" aria-controls="tickets" aria-selected="true"><strong>Tickets</strong></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="home-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="false"><strong>Historial</strong></a>
+      <a class="nav-link" matRipple id="home-tab" data-toggle="tab" href="#historial" role="tab" aria-controls="historial" aria-selected="false"><strong>Historial</strong></a>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tickets" role="tabpanel" aria-labelledby="profile-tab">
-      <table class="table table-borderless">
+      <div>
+      </div>
+      <table class="table table-borderless text-center">
         <thead class="thead-dark">
           <th>ID Ticket</th>
           <th>Usuario</th>
@@ -21,7 +23,7 @@
           <th>Hora</th>
         </thead>
         <tbody>
-          <tr *ngFor="let ti of tickets.rows" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
+          <tr *ngFor="let ti of tickets" matRipple matTooltip="Click para ver mas detalles del ticket con Id {{ti.id}}" (click)="detalles(ti.id,ti.usuario,ti.descripcion,ti.fecha,ti.observacion)">
             <td>{{ti.id}}</td>
             <td>{{ti.usuario}}</td>
             <td>{{ti.tipo}}</td>
@@ -54,30 +56,36 @@
       <div id="cont-find" class="container">
         <div class="form-row">
           <div class="col">
-            <span>
-              <strong>Fecha Inicio</strong>
-              <input [(ngModel)]="fechain" type="date" class="form-control" name="fechain">
-            </span>
+            <mat-form-field>
+              <mat-label><strong>Fecha Inicio</strong></mat-label>
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="fechain" name="fechain">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
           </div>
           <div class="col">
-            <span>
-              <strong>Fecha Final</strong>
-              <input [(ngModel)]="fechafi" type="date" class="form-control" name="fechafi">
-            </span>
+            <mat-form-field>
+              <mat-label><strong>Fecha Final</strong></mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="fechafi" name="fechafi">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
           </div>
           <div class="col">
-            <span>
-              <strong>Cliente</strong>
-              <select class="form-control" name="" (change)="selectChangeHandler($event)">
-                <option value=""></option>
-                <option *ngFor="let cl of clientes.rows" value="{{cl.id}}">{{cl.nombre}}</option>
-              </select>
-            </span>
+            <mat-form-field>
+              <mat-label><strong>Cliente</strong></mat-label>
+              <mat-select (change)="selectChangeHandler($event)">
+                <mat-option value=""></mat-option>
+                <mat-option *ngFor="let cl of clientes" value="{{cl.id}}">{{cl.nombre}}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div class="col">
             <span>
               <br>
-              <button (click)="buscartickets()" class="btn btn-primary" type="button" name="button"><i class="fas fa-search"></i><strong> Buscar</strong></button>
+              <button (click)="buscartickets()" color="primary" mat-raised-button><i class="material-icons">search</i>
+                <strong>Buscar</strong>
+              </button>
             </span>
           </div>
         </div>
@@ -87,11 +95,11 @@
           <tr>
             <div class="col">
               <span>
-                <h5><strong>Cantidad: </strong>{{busqueda.rows?.length || 0 }}</h5>
+                <mat-label><strong>Cantidad: </strong>{{cantidad}}</mat-label>
               </span>
             </div>
           </tr>
-          <tr *ngFor="let bs of busqueda.rows" (click)="historialticket(bs.descripcion,bs.estatus);">
+          <tr *ngFor="let bs of busqueda" matRipple matTooltip="Click para ver mas detalles del ticket con Id {{bs.id}} " (click)="historialticket(bs.descripcion,bs.estatus);">
             <td><strong>Ticket id: </strong>{{bs.id}}</td>
             <td>{{bs.usuario}}</td>
             <td>{{bs.fecha | date: 'dd/MM/yyyy'}}</td>

@@ -12,4 +12,6 @@
 
 .tab-content {
   margin-top: 2%;
+  width: 100%;
+  overflow: auto;
 }

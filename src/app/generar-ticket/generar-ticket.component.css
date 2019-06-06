@@ -1,3 +1,7 @@
+.container {
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+}
 
 .my-drop-zone {
   border: dotted 3px lightgray;
@@ -10,8 +14,31 @@
 .another-file-over-class {
   border: dotted 3px green;
 }
-.filezone{
+
+.filezone {
   margin-left: 10%;
   margin-bottom: 35%;
   margin-top: 35%;
+}
+
+.tab-content {
+  margin-top: 2%;
+  width: 100%;
+  overflow: auto;
+}
+
+.cont-progress {
+  margin-top: 5px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.row {
+  margin: 2%;
+}
+
+.btnRem {
+  margin-top: 5px;
 }
